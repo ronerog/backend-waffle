@@ -2,8 +2,9 @@
   "version": 2,
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "src/server.js"
+      "src": "/webhook",
+      "dest": "api/index.js"
     }
-  ]
+  ],
+   "alias": "webhook-waffle.vercel.app"
 }
