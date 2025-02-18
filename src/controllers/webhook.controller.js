@@ -1,4 +1,3 @@
-// src/controllers/webhook.controller.js
 const pool = require("../database/db");
 
 exports.handleWebhook = async (req, res) => {
@@ -40,7 +39,7 @@ exports.handleWebhook = async (req, res) => {
         res.status(200).json({ message: "Webhook processado com sucesso" });
 
     } catch (error) {
-        console.error("❌ Erro ao processar webhook:", error.stack); // Mostra stack do erro
+        console.error("Erro ao processar webhook:", error.stack);
         res.status(500).json({ error: "Erro interno do servidor", details: error.message });
     }    
 };
