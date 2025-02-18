@@ -1,21 +1,15 @@
+// src/server.js
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
 const webhookRoutes = require("./routes/webhook.routes");
 
+dotenv.config();
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-
-app.get("/health", (req, res) => {
-    res.json({status: 'ok'})
-})
-
-// app.all("/webhook", (req, res) => {
-//     console.log("Webhook recebido:");
-//     console.log("Query Params:", { email, id });
-//     console.log("Body:", bodyData);
-//     res.status(200).json({ message: "Webhook processado com sucesso" });
-// })
 
 app.use("/", webhookRoutes);
 
