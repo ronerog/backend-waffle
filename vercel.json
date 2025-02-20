@@ -5,6 +5,5 @@
       "src": "/(.*)",
       "dest": "api/index.js"
     }
-  ],
-   "alias": "webhook-waffle.vercel.app"
+  ]
 }
