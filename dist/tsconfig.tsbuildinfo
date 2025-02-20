@@ -1,0 +1,1 @@
+{"root":["../api/index.ts","../controllers/auth.controller.ts","../controllers/streak.controller.ts","../controllers/webhook.controller.ts","../database/db.ts","../middleware/auth.middleware.ts","../routes/auth.routes.ts","../routes/streak.routes.ts","../routes/webhook.routes.ts"],"version":"5.7.3"}

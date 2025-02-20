@@ -10,7 +10,6 @@ const pool = new pg_1.Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
 });
-// Força fechamento de conexões antes de criar novas
 pool.on("error", (err) => {
     console.error("Erro no banco de dados:", err);
     process.exit(1);
