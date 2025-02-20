@@ -13,12 +13,11 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("", webhook_routes_1.default);
-app.use("/", streak_routes_1.default);
+app.use("", streak_routes_1.default);
 app.options("/webhook", (req, res) => {
     res.set("Allow", "POST, OPTIONS");
     res.sendStatus(200);
 });
-// Definir a porta com tipagem correta
 const PORT = Number(process.env.PORT) || 3005;
 app.listen(PORT, () => {
     console.log(`Webhook rodando na porta ${PORT}`);

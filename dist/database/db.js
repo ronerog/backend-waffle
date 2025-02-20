@@ -8,6 +8,11 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const pool = new pg_1.Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
+    ssl: { rejectUnauthorized: false },
+});
+// Força fechamento de conexões antes de criar novas
+pool.on("error", (err) => {
+    console.error("Erro no banco de dados:", err);
+    process.exit(1);
 });
 exports.default = pool;
