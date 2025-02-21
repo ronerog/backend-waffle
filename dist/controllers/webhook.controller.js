@@ -17,34 +17,41 @@ const db_1 = __importDefault(require("../database/db"));
 const handleWebhook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { data } = req.body;
-        if (!data || !data.email || !data.id) {
+        if (!data) {
             res.status(400).json({ error: "Parâmetros inválidos" });
             return;
         }
-        const { email, id, utm_source, utm_medium, utm_campaign, utm_channel, created_at } = data;
-        console.log("Webhook recebido:", { email, id, utm_source, utm_medium, utm_campaign, utm_channel, created_at });
-        const result = yield db_1.default.query(`SELECT email, streak, created_at 
-             FROM posts 
-             WHERE email = $1 
-             ORDER BY created_at DESC 
-             LIMIT 1`, [email]);
-        let newStreak = 1;
-        if (result.rows.length > 0) {
-            const lastPost = result.rows[0];
-            const lastDate = new Date(lastPost.created_at);
-            const today = new Date(created_at);
-            const diffDays = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
-            if (diffDays === 1) {
-                newStreak = lastPost.streak + 1;
+        const posts = Array.isArray(data) ? data : [data];
+        for (const post of posts) {
+            const { email, id, utm_source, utm_medium, utm_campaign, utm_channel, created_at } = post;
+            if (!email || !id || !created_at) {
+                console.log("Erro: Parâmetros inválidos", post);
+                continue;
             }
-            else if (diffDays > 1) {
-                newStreak = 1;
+            console.log("Webhook recebido:", { email, id, utm_source, utm_medium, utm_campaign, utm_channel, created_at });
+            const result = yield db_1.default.query(`SELECT email, streak, created_at 
+         FROM posts 
+         WHERE email = $1 
+         ORDER BY created_at DESC 
+         LIMIT 1`, [email]);
+            let newStreak = 1;
+            if (result.rows.length > 0) {
+                const lastPost = result.rows[0];
+                const lastDate = new Date(lastPost.created_at);
+                const today = new Date(created_at);
+                const diffDays = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) {
+                    newStreak = lastPost.streak + 1;
+                }
+                else if (diffDays > 1) {
+                    newStreak = 1;
+                }
             }
+            yield db_1.default.query(`INSERT INTO posts (email, post_id, utm_source, utm_medium, utm_campaign, utm_channel, streak, created_at) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [email, id, utm_source, utm_medium, utm_campaign, utm_channel, newStreak, created_at]);
+            console.log(`Streak atualizado: ${newStreak} para ${email}`);
         }
-        yield db_1.default.query(`INSERT INTO posts (email, post_id, utm_source, utm_medium, utm_campaign, utm_channel, streak, created_at) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [email, id, utm_source, utm_medium, utm_campaign, utm_channel, newStreak, created_at]);
-        console.log(`Streak atualizado: ${newStreak} para ${email}`);
-        res.status(200).json({ message: "Webhook processado com sucesso", streak: newStreak });
+        res.status(200).json({ message: "Webhook processado com sucesso" });
     }
     catch (error) {
         console.error("Erro ao processar webhook:", error.stack);

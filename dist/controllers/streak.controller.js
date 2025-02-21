@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllStreaks = void 0;
+exports.getStreakByEmail = exports.getAllStreaks = void 0;
 const db_1 = __importDefault(require("../database/db"));
 const getAllStreaks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -29,4 +29,24 @@ const getAllStreaks = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.getAllStreaks = getAllStreaks;
+const getStreakByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.params;
+        if (!email) {
+            res.status(400).json({ error: "Email é obrigatório" });
+            return;
+        }
+        const result = yield db_1.default.query("SELECT * FROM posts WHERE email = $1 ORDER BY created_at DESC", [email]);
+        if (result.rows.length === 0) {
+            res.status(404).json({ message: "Nenhum streak encontrado" });
+            return;
+        }
+        res.status(200).json(result.rows);
+    }
+    catch (error) {
+        console.error("Erro ao buscar streaks:", error);
+        res.status(500).json({ error: "Erro ao buscar streaks" });
+    }
+});
+exports.getStreakByEmail = getStreakByEmail;
 exports.default = exports.getAllStreaks;
