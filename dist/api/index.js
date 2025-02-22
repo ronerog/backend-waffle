@@ -9,6 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const webhook_routes_1 = __importDefault(require("../routes/webhook.routes"));
 const streak_routes_1 = __importDefault(require("../routes/streak.routes"));
 const auth_routes_1 = __importDefault(require("../routes/auth.routes"));
+const user_routes_1 = __importDefault(require("../routes/user.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -16,6 +17,7 @@ app.use(express_1.default.json());
 app.use("", webhook_routes_1.default);
 app.use("", streak_routes_1.default);
 app.use("", auth_routes_1.default);
+app.use("", user_routes_1.default);
 app.options("/webhook", (req, res) => {
     res.set("Allow", "POST, OPTIONS");
     res.sendStatus(200);

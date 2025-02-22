@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import webhookRoutes from "../routes/webhook.routes";
 import streakRoutes from "../routes/streak.routes";
 import authRoutes from "../routes/auth.routes";
+import userRoutes from "../routes/user.routes";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("", webhookRoutes);
 app.use("", streakRoutes);
 app.use("", authRoutes);
+app.use("", userRoutes);
 
 app.options("/webhook", (req: Request, res: Response) => {
     res.set("Allow", "POST, OPTIONS");
